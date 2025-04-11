@@ -6,7 +6,7 @@ import java.io.File
  * Implementación de utilidad de gestión de archivos de texto basada en la API estándar de ficheros de Kotlin/Java.
  * Permite crear rutas, leer, escribir y listar archivos en el sistema de ficheros.
  */
-class GestorFichText : IUtilFiles {
+class GestorFichTxt : IUtilFich {
 
     /**
      * Crea un directorio en la ruta indicada si no existe.

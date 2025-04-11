@@ -1,6 +1,7 @@
 package es.prog2425.calclog.app
 
-import es.prog2425.calclog.model.Operadores
+import es.prog2425.calclog.model.Operador
+import es.prog2425.calclog.service.ServicioCalc
 import es.prog2425.calclog.service.IServicioLog
 import es.prog2425.calclog.ui.IEntradaSalida
 
@@ -10,8 +11,8 @@ import es.prog2425.calclog.ui.IEntradaSalida
  */
 class Controlador(
     private val ui: IEntradaSalida,
-    private val calculadora: Calculadora,
-    private val servicioLog: IServicioLog
+    private val calculadora: ServicioCalc,
+    private val gestorLog: IServicioLog
 ) {
 
     companion object {
@@ -25,9 +26,9 @@ class Controlador(
     fun iniciar(args: Array<String>) {
         if (!procesarArgumentos(args)) return
 
-        mostrarInfo(servicioLog.getInfoUltimoLog())
+        mostrarInfo(gestorLog.getInfoUltimoLog())
 
-        servicioLog.crearNuevoLog()
+        gestorLog.crearNuevoLog()
 
         if (args.size == 4) ejecutarCalculoConArgumentos(args)
 
@@ -51,7 +52,7 @@ class Controlador(
             }
         }
 
-        if (servicioLog.crearRutaLog(ruta)) {
+        if (gestorLog.crearRutaLog(ruta)) {
             ui.mostrar("Ruta $ruta creada")
         }
 
@@ -75,13 +76,13 @@ class Controlador(
      */
     private fun ejecutarCalculoConArgumentos(args: Array<String>) {
         val numero1 = args[1].replace(',', '.').toDoubleOrNull()
-        val operador = Operadores.getOperador(args[2].firstOrNull())
+        val operador = Operador.getOperador(args[2].firstOrNull())
         val numero2 = args[3].replace(',', '.').toDoubleOrNull()
 
         if (numero1 == null || operador == null || numero2 == null) {
             val msg = "Error en los argumentos: operación no válida."
             ui.mostrarError(msg)
-            servicioLog.registrarEntradaLog(msg)
+            gestorLog.registrarEntradaLog(msg)
         } else {
             realizarCalculo(numero1, operador, numero2)
         }
@@ -93,11 +94,16 @@ class Controlador(
     private fun bucleCalculosUsuario() {
         do {
             try {
-                realizarCalculo()
+                val numero1 = ui.pedirDouble("Introduce el primer número: ") ?: throw InfoCalcException("El primer número no es válido!")
+                val simbolo = ui.pedirInfo("Introduce el operador (+, -, x, /): ").firstOrNull()
+                val operador = Operador.getOperador(simbolo) ?: throw InfoCalcException("El operador no es válido!")
+                val numero2 = ui.pedirDouble("Introduce el segundo número: ") ?: throw InfoCalcException("El segundo número no es válido!")
+
+                realizarCalculo(numero1, operador, numero2)
             } catch (e: InfoCalcException) {
                 val mensaje = e.message ?: "Se ha producido un error!"
                 ui.mostrarError(mensaje)
-                servicioLog.registrarEntradaLog(mensaje)
+                gestorLog.registrarEntradaLog(mensaje)
             }
         } while (ui.preguntar())
 
@@ -108,13 +114,9 @@ class Controlador(
      * Ejecuta un cálculo utilizando parámetros explícitos o solicitándolos al usuario.
      * Registra el resultado en el log.
      */
-    private fun realizarCalculo(num1: Double? = null, operador: Operadores? = null, num2: Double? = null) {
-        val mensaje = if (num1 == null || operador == null || num2 == null) {
-            calculadora.pedirCalculo().toString()
-        } else {
-            calculadora.realizarCalculo(num1, operador, num2).toString()
-        }
-        ui.mostrar(mensaje)
-        servicioLog.registrarEntradaLog(mensaje)
+    private fun realizarCalculo(num1: Double, operador: Operador, num2: Double) {
+        val calculo = calculadora.realizarCalculo(num1, operador, num2)
+        ui.mostrar(calculo.toString())
+        gestorLog.registrarEntradaLog(calculo)
     }
 }

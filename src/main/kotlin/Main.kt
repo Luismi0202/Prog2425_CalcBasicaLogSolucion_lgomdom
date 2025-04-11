@@ -1,11 +1,11 @@
 package es.prog2425.calclog
 
-import es.prog2425.calclog.app.Calculadora
+import es.prog2425.calclog.service.ServicioCalc
 import es.prog2425.calclog.app.Controlador
 import es.prog2425.calclog.data.RepoLogTxt
 import es.prog2425.calclog.service.ServicioLog
 import es.prog2425.calclog.ui.Consola
-import es.prog2425.calclog.utils.GestorFichText
+import es.prog2425.calclog.utils.GestorFichTxt
 
 /**
  * Punto de entrada de la aplicación.
@@ -15,9 +15,8 @@ import es.prog2425.calclog.utils.GestorFichText
  */
 fun main(args: Array<String>) {
 
-    val consola = Consola()
-    val repoLog = RepoLogTxt(GestorFichText())
-    Controlador(consola, Calculadora(consola), ServicioLog(repoLog)).iniciar(args)
+    val repoLog = RepoLogTxt(GestorFichTxt())
+    Controlador(Consola(), ServicioCalc(), ServicioLog(repoLog)).iniciar(args)
 
     /*
     O también instanciando en variables locales... es lo mismo al fin y al cabo.
@@ -26,7 +25,7 @@ fun main(args: Array<String>) {
     val gestorFicheros = GestorFichText()
     val repoLog = RepoLogTxt(gestorFicheros)
     val servicioLog = ServicioLog(repoLog)
-    val calculadora = Calculadora(consola)
+    val calculadora = ServicioCalc()
     val controlador = Controlador(consola, calculadora, servicioLog)
 
     controlador.iniciar(args)

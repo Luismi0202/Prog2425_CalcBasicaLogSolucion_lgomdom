@@ -3,7 +3,7 @@ package es.prog2425.calclog.model
 data class Calculo(
     val numero1: Double,
     val numero2: Double,
-    val operador: Operadores,
+    val operador: Operador,
     val resultado: Double
 ) {
     override fun toString(): String {

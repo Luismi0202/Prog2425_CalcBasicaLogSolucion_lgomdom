@@ -1,14 +1,14 @@
 package es.prog2425.calclog.data
 
 import es.prog2425.calclog.model.Calculo
-import es.prog2425.calclog.utils.IUtilFiles
+import es.prog2425.calclog.utils.IUtilFich
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 /**
  * Implementación de [IRepoLog] que gestiona el almacenamiento de logs en archivos de texto.
  */
-class RepoLogTxt(private val fichero: IUtilFiles) : IRepoLog {
+class RepoLogTxt(private val fichero: IUtilFich) : IRepoLog {
 
     override var ruta: String? = null
     override var logActual: String? = null

@@ -1,6 +1,6 @@
 package es.prog2425.calclog.model
 
-enum class Operadores(val simboloUi: Char, val simbolos: List<Char>) {
+enum class Operador(val simboloUi: Char, val simbolos: List<Char>) {
     SUMA('+', listOf('+')),
     RESTA('-', listOf('-')),
     MULTIPLICACION('x', listOf('*', 'x')),

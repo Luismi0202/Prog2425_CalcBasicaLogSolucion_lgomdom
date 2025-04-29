@@ -5,7 +5,7 @@ plugins {
 }
 
 application {
-    mainClass.set("es.iesraprog2425.pruebaes.MainKt")
+    mainClass.set("es.prog2425.calclog.MainKt")
 }
 
 group = "es.prog2425.calclog"
@@ -17,6 +17,7 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
+    implementation("com.h2database:h2:2.1.214")
 }
 
 tasks.test {

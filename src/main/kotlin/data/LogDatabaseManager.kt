@@ -1,16 +1,27 @@
 package es.prog2425.calclog.data
 
+import java.nio.file.Paths
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
 
+/**
+ * Esta clase la he pensado con la idea de permitir que en la base de datos
+ * el log se pueda hacer con un CRUD(create,read,update,delete)
+ * es decir, que se puedan actualizar, borrar,insertar
+ * y consultar lo datos del log.
+ * Se pone la ruta relativa y luego se transforma en absoluta porque te lo trata
+ * como dos bases de datos distintas.
+ */
 class LogDatabaseManager {
     private val connection: Connection
 
     init {
         // Configurar la conexión con H2
-        connection = DriverManager.getConnection("jdbc:h2:./logsDb", "sa", "")
+        val rutaRelativa = "./logsDb"
+        val rutaAbsoluta = Paths.get(rutaRelativa).toAbsolutePath().toString()
+        connection = DriverManager.getConnection("jdbc:h2:$rutaAbsoluta", "sa", "")
         // Crear tabla si no existe
         val createTableSQL = """
             CREATE TABLE IF NOT EXISTS Logs (
@@ -23,7 +34,7 @@ class LogDatabaseManager {
         connection.createStatement().execute(createTableSQL)
     }
 
-    // Crear un nuevo log
+    // Crear un nuevo log (create)
     fun insertLog(level: String, message: String) {
         val sql = "INSERT INTO Logs (level, message) VALUES (?, ?)"
         val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
@@ -32,7 +43,7 @@ class LogDatabaseManager {
         preparedStatement.executeUpdate()
     }
 
-    // Leer todos los logs
+    // Leer todos los logs (read)
     fun getLogs(): List<Map<String, Any>> {
         val logs = mutableListOf<Map<String, Any>>()
         val sql = "SELECT * FROM Logs"
@@ -50,7 +61,11 @@ class LogDatabaseManager {
         return logs
     }
 
-    // Actualizar un log por ID
+    //Como realmente no vamos a usar toodo del CRUD, comento
+    //las de actualizar y eliminar ya que lo único que se hace
+    //es consultar al iniciar el programa y añadir al ir haciendo operaciones
+    /**
+    // Actualizar un log por ID (update)
     fun updateLog(id: Int, level: String, message: String) {
         val sql = "UPDATE Logs SET level = ?, message = ? WHERE id = ?"
         val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
@@ -60,11 +75,11 @@ class LogDatabaseManager {
         preparedStatement.executeUpdate()
     }
 
-    // Eliminar un log por ID
+    // Eliminar un log por ID (delete)
     fun deleteLog(id: Int) {
         val sql = "DELETE FROM Logs WHERE id = ?"
         val preparedStatement: PreparedStatement = connection.prepareStatement(sql)
         preparedStatement.setInt(1, id)
         preparedStatement.executeUpdate()
-    }
+    }*/
 }

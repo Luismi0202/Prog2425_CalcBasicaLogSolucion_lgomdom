@@ -51,11 +51,7 @@ class Controlador(
                 return false
             }
         }
-
-        if (gestorLog.crearRutaLog(ruta)) {
-            ui.mostrar("Ruta $ruta creada")
-        }
-
+        
         return true
     }
 

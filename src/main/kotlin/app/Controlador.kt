@@ -51,7 +51,7 @@ class Controlador(
                 return false
             }
         }
-        
+
         return true
     }
 
